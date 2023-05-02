@@ -66,8 +66,6 @@ namespace Photogrammetry.ViewModels
 
         void ExecuteInsertDataCommand()
         {
-            //DataOfStereopairs.Add(new FirstTaskModel { });
-
             if(!CheckField(out string err))
                 MessageBox.Show(err, "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
             else
@@ -111,6 +109,12 @@ namespace Photogrammetry.ViewModels
 
         void ExecuteCalculateCommand()
         {
+            if(DataOfStereopairs.Count<= 0)
+            {
+                MessageBox.Show("Нет данных для вычисления!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             SaveFileSolution saveFile = new SaveFileSolution();
             saveFile.SaveFirstSolution(DataOfStereopairs);
         }

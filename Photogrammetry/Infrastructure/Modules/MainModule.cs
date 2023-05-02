@@ -20,6 +20,7 @@ namespace Photogrammetry.Infrastructure.Modules
         {
             containerRegistry.RegisterForNavigation<Toolbar>();
             containerRegistry.RegisterForNavigation<FirstTaskPage>();
+            containerRegistry.RegisterForNavigation<SecondTaskPage>();
         }
     }
 }

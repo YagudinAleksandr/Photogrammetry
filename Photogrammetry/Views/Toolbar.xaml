@@ -7,7 +7,7 @@
         <TextBlock Text="Навигационное меню для задач" HorizontalAlignment="Center" FontWeight="Bold"/>
         <StackPanel Orientation="Horizontal">
             <Button Content="Задача №1" Margin="5" Command="{Binding FirstTaskCommand}" Width="150"/>
-            <Button Content="Задача №2" Margin="5" Width="150"/>
+            <Button Content="Задача №2" Margin="5" Command="{Binding SecondTaskCommand}" Width="150"/>
             <Button Content="Задача №3" Margin="5" Width="150"/>
             <Button Content="Задача №4" Margin="5" Width="150"/>
             <Button Content="Задача №5" Margin="5" Width="150"/>

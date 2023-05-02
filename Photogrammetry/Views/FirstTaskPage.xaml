@@ -83,18 +83,36 @@
 
             <DataGrid ItemsSource="{Binding DataOfStereopairs, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Xв" Binding="{Binding Xb}" Width="60"/>
-                    <DataGridTextColumn Header="Yв" Binding="{Binding Yb}" Width="60"/>
-                    <DataGridTextColumn Header="pв" Binding="{Binding Pb}" Width="60"/>
-                    <DataGridTextColumn Header="qв" Binding="{Binding Qb}" Width="60"/>
-                    <DataGridTextColumn Header="Xл" Binding="{Binding Xl}" Width="60"/>
-                    <DataGridTextColumn Header="Yл" Binding="{Binding Yl}" Width="60"/>
-                    <DataGridTextColumn Header="pл" Binding="{Binding Pl}" Width="60"/>
-                    <DataGridTextColumn Header="qл" Binding="{Binding Ql}" Width="60"/>
-                    <DataGridTextColumn Header="Xп" Binding="{Binding Xp}" Width="60"/>
-                    <DataGridTextColumn Header="Yп" Binding="{Binding Yp}" Width="60"/>
-                    <DataGridTextColumn Header="pп" Binding="{Binding Pp}" Width="60"/>
-                    <DataGridTextColumn Header="qп" Binding="{Binding Qp}" Width="60"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False" Header="Xв" Binding="{Binding Xb}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="Yв" Binding="{Binding Yb}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="pв" Binding="{Binding Pb}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="qв" Binding="{Binding Qb}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="Xл" Binding="{Binding Xl}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="Yл" Binding="{Binding Yl}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="pл" Binding="{Binding Pl}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="qл" Binding="{Binding Ql}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="Xп" Binding="{Binding Xp}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="Yп" Binding="{Binding Yp}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="pп" Binding="{Binding Pp}" Width="40"/>
+                    <DataGridTextColumn CanUserReorder="False" CanUserSort="False"  Header="qп" Binding="{Binding Qp}" Width="40"/>
+                    <DataGridTemplateColumn Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Button Content="Изменить" Padding="3" Command="{Binding Path=DataContext.EditDataFromCollectionCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Button Content="Удалить" Padding="3" Command="{Binding Path=DataContext.DeleteDataFromCollectionCommand,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 

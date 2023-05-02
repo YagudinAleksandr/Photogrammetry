@@ -21,6 +21,10 @@ namespace Photogrammetry.ViewModels
         public ObservableCollection<FirstTaskModel> DataOfStereopairs { get; set; }
 
         #region Properties for task
+        private int indexOfElement;
+
+        private FirstTaskModel _entity;
+        public FirstTaskModel Entity { get { return _entity; } set { SetProperty(ref _entity, value); } }
 
         string valOne, valTwo, valThree, valFour, valFive, valSix, valSeven, valEight, valNine, valTen, valEleven, valTwelve;
         public string ValOne { get { return valOne; } set { SetProperty(ref valOne, value); } }
@@ -49,7 +53,10 @@ namespace Photogrammetry.ViewModels
         private DelegateCommand _insertDataCommand;
         private DelegateCommand _backToNavMenuCommand;
         private DelegateCommand _calculateCommand;
-
+        private DelegateCommand<FirstTaskModel> _deleteDataFromCollectionCommand;
+        private DelegateCommand<FirstTaskModel> _editDataFromCollectionCommand;
+        
+        
         public DelegateCommand ResetDataCommnad =>
             _resetDataCommnad ?? (_resetDataCommnad = new DelegateCommand(ExecuteResetDataCommnad));
         public DelegateCommand InsertDataCommand =>
@@ -58,10 +65,15 @@ namespace Photogrammetry.ViewModels
             _backToNavMenuCommand ?? (_backToNavMenuCommand = new DelegateCommand(ExecuteBackToNavMenuCommand));
         public DelegateCommand CalculateCommand =>
             _calculateCommand ?? (_calculateCommand = new DelegateCommand(ExecuteCalculateCommand));
+        public DelegateCommand<FirstTaskModel> DeleteDataFromCollectionCommand =>
+            _deleteDataFromCollectionCommand ?? (_deleteDataFromCollectionCommand = new DelegateCommand<FirstTaskModel>(ExecuteDeleteDataFromCollectionCommand));
+        public DelegateCommand<FirstTaskModel> EditDataFromCollectionCommand =>
+            _editDataFromCollectionCommand ?? (_editDataFromCollectionCommand = new DelegateCommand<FirstTaskModel>(ExecuteEditDataFromCollectionCommand));
 
         void ExecuteResetDataCommnad()
         {
-
+            ValOne = ValTwo = ValThree = ValFour = ValFive = ValSix = ValSeven = ValEight = ValNine = ValTen = ValEleven = ValTwelve = string.Empty;
+            Entity = null;
         }
 
         void ExecuteInsertDataCommand()
@@ -73,24 +85,44 @@ namespace Photogrammetry.ViewModels
                 try
                 {
                     double[] vals = DecimalCheker.CheckDecimal(ValOne, ValTwo, ValThree, ValFour, ValFive, ValSix, ValSeven, ValEight, ValNine, ValTen, ValEleven, ValTwelve);
-
-                    DataOfStereopairs.Add(new FirstTaskModel
+                    if (_entity == null)
                     {
-                        Xb = vals[0],
-                        Yb = vals[1],
-                        Pb = vals[2],
-                        Qb = vals[3],
-                        Xl = vals[4],
-                        Yl = vals[5],
-                        Pl = vals[6],
-                        Ql = vals[7],
-                        Xp = vals[8],
-                        Yp = vals[9],
-                        Pp = vals[10],
-                        Qp = vals[11],
-                    });
+                        DataOfStereopairs.Add(new FirstTaskModel
+                        {
+                            Xb = vals[0],
+                            Yb = vals[1],
+                            Pb = vals[2],
+                            Qb = vals[3],
+                            Xl = vals[4],
+                            Yl = vals[5],
+                            Pl = vals[6],
+                            Ql = vals[7],
+                            Xp = vals[8],
+                            Yp = vals[9],
+                            Pp = vals[10],
+                            Qp = vals[11],
+                        });
+                    }
+                    else
+                    {
+                        _entity.Xb = vals[0];
+                        _entity.Yb = vals[1];
+                        _entity.Pb = vals[2];
+                        _entity.Qb = vals[3];
+                        _entity.Xl = vals[4];
+                        _entity.Yl = vals[5];
+                        _entity.Pl = vals[6];
+                        _entity.Ql = vals[7];
+                        _entity.Xp = vals[8];
+                        _entity.Yp = vals[9];
+                        _entity.Pp = vals[10];
+                        _entity.Qp = vals[11];
 
+                        DataOfStereopairs.RemoveAt(indexOfElement);
+                        DataOfStereopairs.Insert(indexOfElement, _entity);
+                    }
                     ValOne = ValTwo = ValThree = ValFour = ValFive = ValSix = ValSeven = ValEight = ValNine = ValTen = ValEleven = ValTwelve = string.Empty;
+                    Entity = null;
 
                 }
                 catch(Exception ex)
@@ -118,7 +150,34 @@ namespace Photogrammetry.ViewModels
             SaveFileSolution saveFile = new SaveFileSolution();
             saveFile.SaveFirstSolution(DataOfStereopairs);
         }
-        
+
+        void ExecuteDeleteDataFromCollectionCommand(FirstTaskModel val)
+        {
+            indexOfElement = DataOfStereopairs.IndexOf(val);
+
+            if (indexOfElement > -1 && indexOfElement < DataOfStereopairs.Count)
+                DataOfStereopairs.RemoveAt(indexOfElement);
+        }
+
+        void ExecuteEditDataFromCollectionCommand(FirstTaskModel val)
+        {
+            Entity = val;
+            indexOfElement = DataOfStereopairs.IndexOf(val);
+
+            ValOne = string.Format(val.Xb.ToString(), ".", ",");
+            ValTwo = string.Format(val.Yb.ToString(), ".", ",");
+            ValThree = string.Format(val.Pb.ToString(), ".", ",");
+            ValFour = string.Format(val.Qb.ToString(), ".", ",");
+            ValFive = string.Format(val.Xl.ToString(), ".", ",");
+            ValSix = string.Format(val.Yl.ToString(), ".", ",");
+            ValSeven = string.Format(val.Pl.ToString(), ".", ",");
+            ValEight = string.Format(val.Ql.ToString(), ".", ",");
+            ValNine = string.Format(val.Xp.ToString(), ".", ",");
+            ValTen = string.Format(val.Yp.ToString(), ".", ",");
+            ValEleven = string.Format(val.Pp.ToString(), ".", ",");
+            ValTwelve = string.Format(val.Qp.ToString(), ".", ",");
+        }
+
         private bool CheckField(out string message)
         {
             if (string.IsNullOrWhiteSpace(ValOne))

@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace Photogrammetry.ViewModels
 {
-    public class SecondTaskPageViewModel : BindableBase
+    public class FourthTaskPageViewModel : BindableBase
     {
         /// <summary>
         /// Указатель навигации
@@ -18,18 +18,13 @@ namespace Photogrammetry.ViewModels
         /// <summary>
         /// Коллекция значений
         /// </summary>
-        public ObservableCollection<SecondTaskModel> DataOfStereopairs { get; set; }
-        public SecondTaskPageViewModel(IRegionManager regionManager)
-        {
-            iregionManager = regionManager;
-            DataOfStereopairs = new ObservableCollection<SecondTaskModel>();
-        }
+        public ObservableCollection<FourthTaskModel> DataOfStereopairs { get; set; }
 
         #region Properties for task
         private int indexOfElement;
 
-        private SecondTaskModel _entity;
-        public SecondTaskModel Entity { get { return _entity; } set { SetProperty(ref _entity, value); } }
+        private FourthTaskModel _entity;
+        public FourthTaskModel Entity { get { return _entity; } set { SetProperty(ref _entity, value); } }
 
         string valOne, valTwo, valThree, valFour, valFive, valSix, valSeven, valEight, valNine, valTen, valEleven, valTwelve;
         public string ValOne { get { return valOne; } set { SetProperty(ref valOne, value); } }
@@ -40,15 +35,24 @@ namespace Photogrammetry.ViewModels
         public string ValSix { get { return valSix; } set { SetProperty(ref valSix, value); } }
         public string ValSeven { get { return valSeven; } set { SetProperty(ref valSeven, value); } }
         public string ValEight { get { return valEight; } set { SetProperty(ref valEight, value); } }
+        public string ValNine { get { return valNine; } set { SetProperty(ref valNine, value); } }
+        public string ValTen { get { return valTen; } set { SetProperty(ref valTen, value); } }
         #endregion
 
+        public FourthTaskPageViewModel(IRegionManager regionManager)
+        {
+            iregionManager = regionManager;
+            DataOfStereopairs = new ObservableCollection<FourthTaskModel>();
+        }
+
         #region Commands
+
         private DelegateCommand _resetDataCommnad;
         private DelegateCommand _insertDataCommand;
         private DelegateCommand _backToNavMenuCommand;
         private DelegateCommand _calculateCommand;
-        private DelegateCommand<SecondTaskModel> _deleteDataFromCollectionCommand;
-        private DelegateCommand<SecondTaskModel> _editDataFromCollectionCommand;
+        private DelegateCommand<FourthTaskModel> _deleteDataFromCollectionCommand;
+        private DelegateCommand<FourthTaskModel> _editDataFromCollectionCommand;
 
 
         public DelegateCommand ResetDataCommnad =>
@@ -59,14 +63,14 @@ namespace Photogrammetry.ViewModels
             _backToNavMenuCommand ?? (_backToNavMenuCommand = new DelegateCommand(ExecuteBackToNavMenuCommand));
         public DelegateCommand CalculateCommand =>
             _calculateCommand ?? (_calculateCommand = new DelegateCommand(ExecuteCalculateCommand));
-        public DelegateCommand<SecondTaskModel> DeleteDataFromCollectionCommand =>
-            _deleteDataFromCollectionCommand ?? (_deleteDataFromCollectionCommand = new DelegateCommand<SecondTaskModel>(ExecuteDeleteDataFromCollectionCommand));
-        public DelegateCommand<SecondTaskModel> EditDataFromCollectionCommand =>
-            _editDataFromCollectionCommand ?? (_editDataFromCollectionCommand = new DelegateCommand<SecondTaskModel>(ExecuteEditDataFromCollectionCommand));
+        public DelegateCommand<FourthTaskModel> DeleteDataFromCollectionCommand =>
+            _deleteDataFromCollectionCommand ?? (_deleteDataFromCollectionCommand = new DelegateCommand<FourthTaskModel>(ExecuteDeleteDataFromCollectionCommand));
+        public DelegateCommand<FourthTaskModel> EditDataFromCollectionCommand =>
+            _editDataFromCollectionCommand ?? (_editDataFromCollectionCommand = new DelegateCommand<FourthTaskModel>(ExecuteEditDataFromCollectionCommand));
 
         void ExecuteResetDataCommnad()
         {
-            ValOne = ValTwo = ValThree = ValFour = ValFive = ValSix = ValSeven = ValEight = string.Empty;
+            ValOne = ValTwo = ValThree = ValFour = ValFive = ValSix = ValSeven = ValEight = ValNine = ValTen = string.Empty;
             Entity = null;
         }
 
@@ -78,36 +82,40 @@ namespace Photogrammetry.ViewModels
             {
                 try
                 {
-                    double[] vals = DecimalCheker.CheckDecimal(ValOne, ValTwo, ValThree, ValFour, ValFive, ValSix, ValSeven, ValEight);
+                    double[] vals = DecimalCheker.CheckDecimal(ValOne, ValTwo, ValThree, ValFour, ValFive, ValSix, ValSeven, ValEight, ValNine, ValTen);
                     if (_entity == null)
                     {
-                        DataOfStereopairs.Add(new SecondTaskModel
+                        DataOfStereopairs.Add(new FourthTaskModel
                         {
-                            Alpha1 = vals[0],
-                            Gamma2 = vals[1],
-                            Alpha2Tier = vals[2],
-                            Gamma1Tier = vals[3],
-                            Gamma1 = vals[4],
-                            Alpha2 = vals[5],
-                            Gamma2Tier = vals[6],
-                            Alpha1Tier = vals[7]
+                            AlphaB1 = vals[0],
+                            Alpha1 = vals[1],
+                            Gamma1 = vals[2],
+                            Alpha2 = vals[3],
+                            Gamma2 = vals[4],
+                            B1 = vals[5],
+                            Betta1 = vals[6],
+                            Betta2 = vals[7],
+                            X1Usl = vals[8],
+                            Y1Usl = vals[9]
                         });
                     }
                     else
                     {
-                        _entity.Alpha1 = vals[0];
-                        _entity.Gamma2 = vals[1];
-                        _entity.Alpha2Tier = vals[2];
-                        _entity.Gamma1Tier = vals[3];
-                        _entity.Gamma1 = vals[4];
-                        _entity.Alpha2 = vals[5];
-                        _entity.Gamma2Tier = vals[6];
-                        _entity.Alpha1Tier = vals[7];
+                        _entity.AlphaB1 = vals[0];
+                        _entity.Alpha1 = vals[1];
+                        _entity.Gamma1 = vals[2];
+                        _entity.Alpha2 = vals[3];
+                        _entity.Gamma2 = vals[4];
+                        _entity.B1 = vals[5];
+                        _entity.Betta1 = vals[6];
+                        _entity.Betta2 = vals[7];
+                        _entity.X1Usl = vals[8];
+                        _entity.Y1Usl = vals[9];
 
                         DataOfStereopairs.RemoveAt(indexOfElement);
                         DataOfStereopairs.Insert(indexOfElement, _entity);
                     }
-                    ValOne = ValTwo = ValThree = ValFour = ValFive = ValSix = ValSeven = ValEight = string.Empty;
+                    ValOne = ValTwo = ValThree = ValFour = ValFive = ValSix = ValSeven = ValEight = ValNine = ValTen = string.Empty;
                     Entity = null;
 
                 }
@@ -132,12 +140,12 @@ namespace Photogrammetry.ViewModels
                 MessageBox.Show("Нет данных для вычисления!", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            
+
             SaveFileSolution saveFile = new SaveFileSolution();
-            saveFile.SaveSecondSolution(DataOfStereopairs);
+            saveFile.SaveFourthSolution(DataOfStereopairs);
         }
 
-        void ExecuteDeleteDataFromCollectionCommand(SecondTaskModel val)
+        void ExecuteDeleteDataFromCollectionCommand(FourthTaskModel val)
         {
             indexOfElement = DataOfStereopairs.IndexOf(val);
 
@@ -145,73 +153,83 @@ namespace Photogrammetry.ViewModels
                 DataOfStereopairs.RemoveAt(indexOfElement);
         }
 
-        void ExecuteEditDataFromCollectionCommand(SecondTaskModel val)
+        void ExecuteEditDataFromCollectionCommand(FourthTaskModel val)
         {
             Entity = val;
             indexOfElement = DataOfStereopairs.IndexOf(val);
 
-            ValOne = string.Format(val.Alpha1.ToString(), ".", ",");
-            ValTwo = string.Format(val.Gamma2.ToString(), ".", ",");
-            ValThree = string.Format(val.Alpha2Tier.ToString(), ".", ",");
-            ValFour = string.Format(val.Gamma1Tier.ToString(), ".", ",");
-            ValFive = string.Format(val.Gamma1.ToString(), ".", ",");
-            ValSix = string.Format(val.Alpha2.ToString(), ".", ",");
-            ValSeven = string.Format(val.Gamma2Tier.ToString(), ".", ",");
-            ValEight = string.Format(val.Alpha1Tier.ToString(), ".", ",");
-            
+            ValOne = string.Format(val.AlphaB1.ToString(), ".", ",");
+            ValTwo = string.Format(val.Alpha1.ToString(), ".", ",");
+            ValThree = string.Format(val.Gamma1.ToString(), ".", ",");
+            ValFour = string.Format(val.Alpha2.ToString(), ".", ",");
+            ValFive = string.Format(val.Gamma2.ToString(), ".", ",");
+            ValSix = string.Format(val.B1.ToString(), ".", ",");
+            ValSeven = string.Format(val.Betta1.ToString(), ".", ",");
+            ValEight = string.Format(val.Betta2.ToString(), ".", ",");
+            ValNine = string.Format(val.X1Usl.ToString(), ".", ",");
+            ValTen = string.Format(val.Y1Usl.ToString(), ".", ",");
         }
 
         private bool CheckField(out string message)
         {
             if (string.IsNullOrWhiteSpace(ValOne))
             {
-                message = "Значение α1 не может быть пустым!";
+                message = "Значение αB1 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValTwo))
             {
-                message = "Значение y2 не может быть пустым!";
+                message = "Значение α1 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValThree))
             {
-                message = "Значение α2' не может быть пустым!";
+                message = "Значение y1 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValFour))
             {
-                message = "Значение y1' не может быть пустым!";
+                message = "Значение α2 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValFive))
             {
-                message = "Значение y1 не может быть пустым!";
+                message = "Значение y2 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValSix))
             {
-                message = "Значение α2 не может быть пустым!";
+                message = "Значение B1 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValSeven))
             {
-                message = "Значение y2' не может быть пустым!";
+                message = "Значение β1 не может быть пустым!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ValEight))
             {
-                message = "Значение α1' не может быть пустым!";
+                message = "Значение β2 не может быть пустым!";
                 return false;
             }
 
-            
+            if (string.IsNullOrWhiteSpace(ValNine))
+            {
+                message = "Значение X1усл не может быть пустым!";
+            }
+
+            if (string.IsNullOrWhiteSpace(ValTen))
+            {
+                message = "Значение Y1усл не может быть пустым!";
+                return false;
+            }
 
             message = string.Empty;
             return true;

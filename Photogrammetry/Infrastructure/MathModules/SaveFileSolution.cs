@@ -211,7 +211,6 @@ namespace Photogrammetry.Infrastructure.MathModules
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         public void SaveThirdSolution(ObservableCollection<ThirdTaskModel> entities)
         {
             int counter = 1;
@@ -284,7 +283,74 @@ namespace Photogrammetry.Infrastructure.MathModules
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        public void SaveFourthSolution(ObservableCollection<FourthTaskModel> entities)
+        {
+            int counter = 1;
 
+            saveFileDialog.ShowDialog();
+
+            fileName = saveFileDialog.FileName;
+
+            fileStream = new FileStream(fileName, FileMode.Create);
+
+            streamWriter = new StreamWriter(fileStream);
+
+            try
+            {
+                streamWriter.WriteLine("Вычисление предварительных координат главных точек снимков");
+                streamWriter.WriteLine($"----------- Дата создания расчета: {DateTime.Now} ---------------");
+
+                foreach (var val in entities)
+                {
+                    double alpha2, basisB2, x2, y2, x3, y3;
+                    alpha2 = basisB2 = x2 = y2 = x3 = y3 = 0.0;
+
+                    x2 = val.X1Usl + Math.Sin(val.AlphaB1 * (Math.PI / 180)) * val.B1;
+                    y2 = val.Y1Usl + Math.Cos(val.AlphaB1 * (Math.PI / 180)) * val.B1;
+
+                    basisB2 = Math.Sin(val.Alpha1 * (Math.PI / 180)) / Math.Sin(val.Gamma1 * (Math.PI / 180)) * val.B1;
+
+                    basisB2 = basisB2 * Math.Sin(val.Gamma2 * (Math.PI / 180)) / Math.Sin(val.Alpha2 * (Math.PI / 180));
+                    alpha2 = val.AlphaB1 + 180 + val.Betta1 + val.Betta2;
+
+                    x3 = x2 + Math.Sin(alpha2 * (Math.PI / 180)) * basisB2;
+                    y3 = y2 + Math.Cos(alpha2 * (Math.PI / 180)) * basisB2;
+
+                    streamWriter.WriteLine("-----------------------------------------");
+                    streamWriter.WriteLine($"Данные для угла № {counter}");
+
+                    streamWriter.WriteLine($"Xв: {val.AlphaB1}");
+                    streamWriter.WriteLine($"Yв: {val.Alpha1}");
+                    streamWriter.WriteLine($"pв: {val.Gamma1}");
+                    streamWriter.WriteLine($"qв: {val.Alpha2}");
+                    streamWriter.WriteLine($"Xл: {val.Gamma2}");
+                    streamWriter.WriteLine($"Yл: {val.B1}");
+                    streamWriter.WriteLine($"pл: {val.Betta1}");
+                    streamWriter.WriteLine($"qл: {val.Betta2}");
+                    streamWriter.WriteLine($"Xп: {val.X1Usl}");
+                    streamWriter.WriteLine($"Yп: {val.Y1Usl}");
+
+                    streamWriter.WriteLine($"Оптимальное решение№ {counter}");
+                    streamWriter.WriteLine($"X2 = {x2}");
+                    streamWriter.WriteLine($"Y2 = {y2}");
+                    streamWriter.WriteLine($"X3 = {x3}");
+                    streamWriter.WriteLine($"Y3 = {y3}");
+                    streamWriter.WriteLine($"Базис B2 = {basisB2}");
+                    streamWriter.WriteLine($"Дирекционный угол Alpha2 = {alpha2}");
+
+                    counter++;
+                }
+
+                streamWriter.Close();
+                fileStream.Close();
+
+                MessageBox.Show("Файл успешно сохранен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         #endregion
 
         #region Private methods

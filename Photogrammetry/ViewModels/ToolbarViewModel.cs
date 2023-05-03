@@ -47,5 +47,14 @@ namespace Photogrammetry.ViewModels
         {
             iregionManager.RequestNavigate("ContentRegion", "FourthTaskPage");
         }
+
+        private DelegateCommand _fivethTaskCommand;
+        public DelegateCommand FivethTaskCommand =>
+            _fivethTaskCommand ?? (_fivethTaskCommand = new DelegateCommand(ExecuteFivethTaskCommand));
+
+        void ExecuteFivethTaskCommand()
+        {
+            iregionManager.RequestNavigate("ContentRegion", "FivethTaskPage");
+        }
     }
 }

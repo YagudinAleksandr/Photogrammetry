@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using Photogrammetry.Models;
-using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -351,6 +350,65 @@ namespace Photogrammetry.Infrastructure.MathModules
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        public void SaveFivethSolution(ObservableCollection<FivethTaskModel> entities)
+        {
+            int counter = 1;
+
+            saveFileDialog.ShowDialog();
+
+            fileName = saveFileDialog.FileName;
+
+            fileStream = new FileStream(fileName, FileMode.Create);
+
+            streamWriter = new StreamWriter(fileStream);
+
+            try
+            {
+                streamWriter.WriteLine("Вычисление координат опознаков");
+                streamWriter.WriteLine($"----------- Дата создания расчета: {DateTime.Now} ---------------");
+
+                foreach (var val in entities)
+                {
+                    val.X1 = val.X1 * (Math.PI / 180);
+                    val.X2 = val.X2 * (Math.PI / 180);
+                    val.Y1 = val.Y1 * (Math.PI / 180);
+                    val.Y2 = val.Y2 * (Math.PI / 180);
+                    val.Tau1 = val.Tau1 * (Math.PI / 180);
+                    val.Tau2 = val.Tau2 * (Math.PI / 180);
+
+                    double Xp, Yp;
+                    Xp = Yp = 0.0;
+
+                    Xp = Jungs(true, val) * (180 / Math.PI);
+                    Yp = Jungs(false, val) * (180 / Math.PI);
+
+                    streamWriter.WriteLine("-----------------------------------------");
+                    streamWriter.WriteLine($"Данные для угла № {counter}");
+
+                    streamWriter.WriteLine($"X1: {val.X1}");
+                    streamWriter.WriteLine($"Y1: {val.Y1}");
+                    streamWriter.WriteLine($"X2: {val.X2}");
+                    streamWriter.WriteLine($"Y2: {val.Y2}");
+                    streamWriter.WriteLine($"τ2: {val.Tau2}");
+                    streamWriter.WriteLine($"τ1: {val.Tau1}");
+
+                    streamWriter.WriteLine($"Оптимальное решение№ {counter}");
+                    streamWriter.WriteLine($"Xp = {Xp}");
+                    streamWriter.WriteLine($"Yp = {Yp}");
+
+                    counter++;
+                }
+
+                streamWriter.Close();
+                fileStream.Close();
+
+                MessageBox.Show("Файл успешно сохранен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         #endregion
 
         #region Private methods
@@ -373,6 +431,41 @@ namespace Photogrammetry.Infrastructure.MathModules
             temp4 += Math.Pow(temp2, 2);
         }
 
+        /// <summary>
+        /// Формула Юнга
+        /// </summary>
+        /// <param name="type">Тип обработки (True - для XP, False - для YP)</param>
+        /// <param name="entity">Сущность в радианах</param>
+        /// <returns>Угол в радианах</returns>
+        private double Jungs(bool type, FivethTaskModel entity)
+        {
+            double result, var1,var2,var3,var4;
+
+            var1 = var2 = var3 = var4 = result = 0.0;
+
+            if(type)
+            {
+                var1 = entity.X1;
+                var2 = entity.X2;
+                var3 = entity.Y2;
+                var4 = entity.Y1;
+            }
+            else
+            {
+                var1 = entity.Y1;
+                var2 = entity.Y2;
+                var3 = entity.X1;
+                var4 = entity.X2;
+            }
+
+            result = var1 * Math.Cos(entity.Tau2) * Math.Sin(entity.Tau1);
+            result += var2 * Math.Cos(entity.Tau1) * Math.Sin(entity.Tau2);
+            result -= (var3 - var4) * Math.Sin(entity.Tau1) * Math.Sin(entity.Tau2);
+
+            result = result / Math.Sin(entity.Tau1 + entity.Tau2);
+
+            return result;
+        }
         #endregion
     }
 }

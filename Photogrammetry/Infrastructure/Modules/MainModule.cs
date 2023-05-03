@@ -23,6 +23,7 @@ namespace Photogrammetry.Infrastructure.Modules
             containerRegistry.RegisterForNavigation<SecondTaskPage>();
             containerRegistry.RegisterForNavigation<ThirdTaskPage>();
             containerRegistry.RegisterForNavigation<FourthTaskPage>();
+            containerRegistry.RegisterForNavigation<FivethTaskPage>();
         }
     }
 }

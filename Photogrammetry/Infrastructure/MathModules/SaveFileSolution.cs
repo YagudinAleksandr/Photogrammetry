@@ -385,12 +385,12 @@ namespace Photogrammetry.Infrastructure.MathModules
                     streamWriter.WriteLine("-----------------------------------------");
                     streamWriter.WriteLine($"Данные для угла № {counter}");
 
-                    streamWriter.WriteLine($"X1: {val.X1}");
-                    streamWriter.WriteLine($"Y1: {val.Y1}");
-                    streamWriter.WriteLine($"X2: {val.X2}");
-                    streamWriter.WriteLine($"Y2: {val.Y2}");
-                    streamWriter.WriteLine($"τ2: {val.Tau2}");
-                    streamWriter.WriteLine($"τ1: {val.Tau1}");
+                    streamWriter.WriteLine($"X1: {val.X1 * (180 / Math.PI)}");
+                    streamWriter.WriteLine($"Y1: {val.Y1 * (180 / Math.PI)}");
+                    streamWriter.WriteLine($"X2: {val.X2 * (180 / Math.PI)}");
+                    streamWriter.WriteLine($"Y2: {val.Y2 * (180 / Math.PI)}");
+                    streamWriter.WriteLine($"τ2: {val.Tau2 * (180 / Math.PI)}");
+                    streamWriter.WriteLine($"τ1: {val.Tau1 * (180 / Math.PI)}");
 
                     streamWriter.WriteLine($"Оптимальное решение№ {counter}");
                     streamWriter.WriteLine($"Xp = {Xp}");

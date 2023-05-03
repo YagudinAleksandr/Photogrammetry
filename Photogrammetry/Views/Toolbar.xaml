@@ -11,8 +11,9 @@
             <Button Content="Задача №3" Margin="5" Command="{Binding ThirdTaskCommand}" Width="150"/>
             <Button Content="Задача №4" Margin="5" Command="{Binding FourthTaskCommand}" Width="150"/>
             <Button Content="Задача №5" Margin="5" Command="{Binding FivethTaskCommand}" Width="150"/>
+            <!--
             <Button Content="Задача №6" Margin="5" Width="150"/>
-            <Button Content="Задача №7" Margin="5" Width="150"/>
+            <Button Content="Задача №7" Margin="5" Width="150"/>-->
         </StackPanel>
     </StackPanel>
 </UserControl>

@@ -10,14 +10,19 @@ namespace Photogrammetry.Infrastructure.MathModules
 {
     public class SaveFileSolution
     {
+        #region Const
         private const double Ep = 0.0000001;
+        private const double Eps = 0.00001;
+        private const double Rad = 57.2957795130823208767981548144105;
+        #endregion
 
+        #region Private fields
         private readonly SaveFileDialog saveFileDialog;
         private FileStream fileStream;
         private StreamWriter streamWriter;
-
         private string fileName = string.Empty;
-        
+        #endregion
+
         public SaveFileSolution()
         {
             saveFileDialog= new SaveFileDialog();
@@ -25,6 +30,7 @@ namespace Photogrammetry.Infrastructure.MathModules
             saveFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
         }
 
+        #region Public Methods
         public void SaveFirstSolution(ObservableCollection<FirstTaskModel> entities)
         {
             int ko = 0, counter = 1;
@@ -205,6 +211,84 @@ namespace Photogrammetry.Infrastructure.MathModules
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        public void SaveThirdSolution(ObservableCollection<ThirdTaskModel> entities)
+        {
+            int counter = 1;
+
+            saveFileDialog.ShowDialog();
+
+            fileName = saveFileDialog.FileName;
+
+            fileStream = new FileStream(fileName, FileMode.Create);
+
+            streamWriter = new StreamWriter(fileStream);
+
+            try
+            {
+                streamWriter.WriteLine("Вычисление центральных углов, образованных направлениями на");
+                streamWriter.WriteLine($"----------- Дата создания расчета: {DateTime.Now} ---------------");
+
+                foreach (var val in entities)
+                {
+                    double temp1, temp2, temp3, temp4, temp5;
+                    temp1 = temp2 = temp3 = temp4 = temp5 = 0.0;
+
+                    temp1 = val.X2 - val.X1;
+                    temp2 = val.Y2 - val.Y1;
+                    temp3 = temp1 / temp2;
+                    temp4 = Math.Atan(temp3) * Rad;
+                    temp5 = temp4;
+
+                    if (temp2 < Eps)
+                    {
+                        if (Math.Abs(temp1) < Eps)
+                            temp5 = temp4 + 180.0;
+
+                        if (Math.Abs(temp1) >= Eps)
+                            temp5 = temp4 + 180.0;
+                    }
+                    else if (temp2 >= Eps)
+                    {
+                        if (Math.Abs(temp1) >= Eps)
+                            temp5 = temp4 + 360.0;
+                    }
+
+                    temp1 = val.M * Math.Sqrt(Math.Pow(temp1, 2) + Math.Pow(temp2, 2));
+
+
+
+                    streamWriter.WriteLine("-----------------------------------------");
+                    streamWriter.WriteLine($"Данные № {counter}");
+
+                    streamWriter.WriteLine($"X1: {val.X1}");
+                    streamWriter.WriteLine($"Y1: {val.Y1}");
+                    streamWriter.WriteLine($"X2: {val.X2}");
+                    streamWriter.WriteLine($"Y2: {val.Y2}");
+                    streamWriter.WriteLine($"m: {val.M}");
+
+                    streamWriter.WriteLine($"Оптимальное решение № {counter}");
+                    streamWriter.WriteLine($"Дирекционный угол = {temp5}");
+                    streamWriter.WriteLine($"Длина первого базиса = {temp1}");
+
+                    counter++;
+                }
+
+                streamWriter.Close();
+                fileStream.Close();
+
+                MessageBox.Show("Файл успешно сохранен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
         /// <summary>
         /// Метод дополнительного подсчета
         /// </summary>
@@ -222,5 +306,7 @@ namespace Photogrammetry.Infrastructure.MathModules
             temp3 += temp2;
             temp4 += Math.Pow(temp2, 2);
         }
+
+        #endregion
     }
 }

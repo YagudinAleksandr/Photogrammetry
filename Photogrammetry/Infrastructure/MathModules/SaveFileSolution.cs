@@ -45,7 +45,7 @@ namespace Photogrammetry.Infrastructure.MathModules
 
             try
             {
-                streamWriter.Write("Вычисление центральных углов, образованных направлениями на");
+                streamWriter.Write("Вычисление центральных углов, образованных направлениями на\n");
                 streamWriter.WriteLine("связующие, трансформационные, и геодезические точки");
                 streamWriter.WriteLine($"----------- Дата создания расчета: {DateTime.Now} ---------------");
 
@@ -316,7 +316,7 @@ namespace Photogrammetry.Infrastructure.MathModules
                     y3 = y2 + Math.Cos(alpha2 * (Math.PI / 180)) * basisB2;
 
                     streamWriter.WriteLine("-----------------------------------------");
-                    streamWriter.WriteLine($"Данные для угла № {counter}");
+                    streamWriter.WriteLine($"Данные {counter}");
 
                     streamWriter.WriteLine($"Xв: {val.AlphaB1}");
                     streamWriter.WriteLine($"Yв: {val.Alpha1}");
@@ -383,7 +383,7 @@ namespace Photogrammetry.Infrastructure.MathModules
                     Yp = Jungs(false, val) * (180 / Math.PI);
 
                     streamWriter.WriteLine("-----------------------------------------");
-                    streamWriter.WriteLine($"Данные для угла № {counter}");
+                    streamWriter.WriteLine($"Данные {counter}");
 
                     streamWriter.WriteLine($"X1: {val.X1 * (180 / Math.PI)}");
                     streamWriter.WriteLine($"Y1: {val.Y1 * (180 / Math.PI)}");
@@ -395,6 +395,91 @@ namespace Photogrammetry.Infrastructure.MathModules
                     streamWriter.WriteLine($"Оптимальное решение№ {counter}");
                     streamWriter.WriteLine($"Xp = {Xp}");
                     streamWriter.WriteLine($"Yp = {Yp}");
+
+                    counter++;
+                }
+
+                streamWriter.Close();
+                fileStream.Close();
+
+                MessageBox.Show("Файл успешно сохранен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public void SaveSixthSolution(ObservableCollection<SixthTaskModel> entities)
+        {
+            int counter = 1;
+
+            saveFileDialog.ShowDialog();
+
+            fileName = saveFileDialog.FileName;
+
+            fileStream = new FileStream(fileName, FileMode.Create);
+
+            streamWriter = new StreamWriter(fileStream);
+
+            try
+            {
+                streamWriter.WriteLine("Вычисление исправленных значений первого бизиса сети и его дирекционного угла");
+                streamWriter.WriteLine($"----------- Дата создания расчета: {DateTime.Now} ---------------");
+
+                foreach (var val in entities)
+                {
+                    double length1, length2, delta1, delta2, delta3, delta4, alpha, betta, al1, al2;
+                    length1 = length2 = delta1 = delta2 = delta3 = delta4 = alpha = betta = al1 = al2 = 0.0;
+
+                    delta1 = val.X661Usl - val.X545Usl;
+                    delta2 = val.Y661Usl - val.Y545Usl;
+                    length1 = Math.Sqrt(Math.Pow(delta1, 2) + Math.Pow(delta2, 2));
+
+                    delta3 = val.X661G - val.X545G;
+                    delta4 = val.Y661G - val.Y545G;
+                    length2 = Math.Sqrt(Math.Pow(delta3, 2) + Math.Pow(delta4, 2));
+
+                    betta = val.Betta * (length2 / length1 * 100000.0);
+
+                    al1 = Math.Acos(delta3 / length2);
+                    al2 = Math.Acos(delta1 / length1);
+
+                    al1 /= Math.PI / 180;
+                    al2 /= Math.PI / 180;
+
+                    if (delta4 >= 0.0) ;
+                    if (delta4 < 0.0)
+                        al1 = 360.0 - al1;
+
+                    if (delta2 >= 0.0) ;
+                    if (delta2 < 0.0)
+                        al2 = 360.0 - al2;
+
+                    while (al2 < 0.0)
+                        al2 += 360.0;
+
+                    while (al2 > 360.0)
+                        al2 -= 360.0;
+
+                    alpha = val.Alpha + (al1 - al2);
+
+                    streamWriter.WriteLine("-----------------------------------------");
+                    streamWriter.WriteLine($"Данные {counter}");
+
+                    streamWriter.WriteLine($"X545усл: {val.X545Usl}");
+                    streamWriter.WriteLine($"Y545усл: {val.Y545Usl}");
+                    streamWriter.WriteLine($"X661усл: {val.X661Usl}");
+                    streamWriter.WriteLine($"Y661усл: {val.Y661Usl}");
+                    streamWriter.WriteLine($"X545г: {val.X545G}");
+                    streamWriter.WriteLine($"Y545г: {val.Y545G}");
+                    streamWriter.WriteLine($"X661г: {val.X661G}");
+                    streamWriter.WriteLine($"Y661г: {val.Y661G}");
+                    streamWriter.WriteLine($"180: {val.Betta}");
+                    streamWriter.WriteLine($"360: {val.Alpha}");
+
+                    streamWriter.WriteLine($"Оптимальное решение № {counter}");
+                    streamWriter.WriteLine($"Betta1исп = {betta}");
+                    streamWriter.WriteLine($"Alpha1исп = {alpha}");
 
                     counter++;
                 }
